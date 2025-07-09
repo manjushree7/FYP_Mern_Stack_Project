@@ -30,7 +30,9 @@ const Header = () => {
                 {user && user.role === 'Customer' && (
                     <>
                         <Link to="/home" className="hover:underline">Home</Link>
+                        <Link to="/menu" className="hover:underline">Menu</Link>
                         <Link to="/events" className="hover:underline">Events</Link>
+                        <Link to="/cart" className="hover:underline">Cart</Link>
                         <Link to="/profile" className="hover:underline">Profile</Link>
                         <button onClick={handleLogout} className="hover:underline">Logout</button>
                     </>
@@ -41,6 +43,7 @@ const Header = () => {
                         <Link to="/dashboard" className="hover:underline">Dashboard</Link>
                         <Link to="/fooditems" className="hover:underline">Food Items</Link>
                         <Link to="/events" className="hover:underline">Events</Link>
+                        <Link to="/orders" className="hover:underline">Orders</Link>
                         <Link to="/profile" className="hover:underline">Profile</Link>
                         <button onClick={handleLogout} className="hover:underline">Logout</button>
                     </>

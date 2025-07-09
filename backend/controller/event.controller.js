@@ -1,22 +1,11 @@
 // controllers/event.controller.js
 import Event from '../models/Event.model.js';
 
-// Create Event
-export const createEvent = async (req, res) => {
-    try {
-        const { name, description, location, date } = req.body;
-        const newEvent = await Event.create({ name, description, location, date });
-        res.status(201).json(newEvent);
-    } catch (error) {
-        console.error('Create Event error:', error);
-        res.status(500).json({ message: 'Failed to create event' });
-    }
-};
 
-// Get All Events
+// Fix: Change 'participants' to 'stallOwners' in populate calls
 export const getEvents = async (req, res) => {
     try {
-        const events = await Event.find().populate('participants', 'stallName location');
+        const events = await Event.find().populate('stallOwners', 'stallName location');
         res.status(200).json(events);
     } catch (error) {
         console.error('Get Events error:', error);
@@ -24,11 +13,10 @@ export const getEvents = async (req, res) => {
     }
 };
 
-// Get Single Event by ID
 export const getEventById = async (req, res) => {
     try {
         const { id } = req.params;
-        const event = await Event.findById(id).populate('participants', 'stallName location');
+        const event = await Event.findById(id).populate('stallOwners', 'stallName location');
         if (!event) return res.status(404).json({ message: 'Event not found' });
         res.status(200).json(event);
     } catch (error) {
@@ -37,16 +25,40 @@ export const getEventById = async (req, res) => {
     }
 };
 
-// Update Event
-export const updateEvent = async (req, res) => {
+// Fix: Update createEvent to handle startDate and endDate
+export const createEvent = async (req, res) => {
     try {
-        const { id } = req.params;
-        const updatedEvent = await Event.findByIdAndUpdate(id, req.body, { new: true });
-        if (!updatedEvent) return res.status(404).json({ message: 'Event not found' });
-        res.status(200).json(updatedEvent);
+        const { name, description, location, startDate, endDate } = req.body;
+        const newEvent = await Event.create({
+            name,
+            description,
+            location,
+            startDate,
+            endDate
+        });
+        res.status(201).json(newEvent);
     } catch (error) {
-        console.error('Update Event error:', error);
-        res.status(500).json({ message: 'Failed to update event' });
+        console.error('Create Event error:', error);
+        res.status(500).json({ message: 'Failed to create event' });
+    }
+};
+
+// Fix: Update addParticipant to use stallOwners
+export const addParticipant = async (req, res) => {
+    try {
+        const { eventId, stallOwnerId } = req.body;
+        const event = await Event.findById(eventId);
+        if (!event) return res.status(404).json({ message: 'Event not found' });
+
+        if (!event.stallOwners.includes(stallOwnerId)) {
+            event.stallOwners.push(stallOwnerId);
+            await event.save();
+        }
+
+        res.status(200).json(event);
+    } catch (error) {
+        console.error('Add Participant error:', error);
+        res.status(500).json({ message: 'Failed to add participant' });
     }
 };
 
@@ -63,21 +75,18 @@ export const deleteEvent = async (req, res) => {
     }
 };
 
-// Add StallOwner to Event participants
-export const addParticipant = async (req, res) => {
+// Update Event
+export const updateEvent = async (req, res) => {
     try {
-        const { eventId, stallOwnerId } = req.body;
-        const event = await Event.findById(eventId);
-        if (!event) return res.status(404).json({ message: 'Event not found' });
-
-        if (!event.participants.includes(stallOwnerId)) {
-            event.participants.push(stallOwnerId);
-            await event.save();
-        }
-
-        res.status(200).json(event);
+        const { id } = req.params;
+        const updatedEvent = await Event.findByIdAndUpdate(id, req.body, { new: true });
+        if (!updatedEvent) return res.status(404).json({ message: 'Event not found' });
+        res.status(200).json(updatedEvent);
     } catch (error) {
-        console.error('Add Participant error:', error);
-        res.status(500).json({ message: 'Failed to add participant' });
+        console.error('Update Event error:', error);
+        res.status(500).json({ message: 'Failed to update event' });
     }
 };
+
+
+

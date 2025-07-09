@@ -10,6 +10,7 @@ const StallOwnerProfileSchema = new Schema({
     foodItems: [{ type: Schema.Types.ObjectId, ref: 'FoodItem' }],
     eventsParticipating: [{ type: Schema.Types.ObjectId, ref: 'Event' }],
     createdAt: { type: Date, default: Date.now },
+    profileImage: { type: String }, // optional
 });
 
 export default model('StallOwnerProfile', StallOwnerProfileSchema);

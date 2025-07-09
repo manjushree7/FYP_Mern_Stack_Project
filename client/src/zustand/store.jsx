@@ -1,7 +1,7 @@
 import { create } from 'zustand';
+import api from '../utlis/api';
 
 const useStore = create((set) => {
-    // Initialize from localStorage
     const storedUser = JSON.parse(localStorage.getItem('user'));
     const storedToken = localStorage.getItem('token');
 
@@ -19,8 +19,10 @@ const useStore = create((set) => {
         logout: () => {
             localStorage.removeItem('user');
             localStorage.removeItem('token');
-            set({ user: null, token: null, isAuthenticated: false });
+            set({ user: null, token: null, isAuthenticated: false, cart: [] });
         },
+
+
     };
 });
 

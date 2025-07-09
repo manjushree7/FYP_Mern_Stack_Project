@@ -5,10 +5,12 @@ import {
     getFoodItemById,
     updateFoodItem,
     deleteFoodItem,
+    getAvailableFoodItems
 } from '../controller/fooditem.controller.js';
 import { authenticateUser } from '../middleware/auth.middleware.js';
 
 const router = express.Router();
+router.get('/public', getAvailableFoodItems);
 
 router.use(authenticateUser); // protect all routes
 

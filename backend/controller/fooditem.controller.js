@@ -89,3 +89,15 @@ export const deleteFoodItem = async (req, res) => {
         res.status(500).json({ message: 'Failed to delete food item' });
     }
 };
+
+// Public: get all available food items (no auth needed)
+export const getAvailableFoodItems = async (req, res) => {
+    try {
+        const foodItems = await FoodItem.find({ available: true }).populate('stallOwner', 'stallName');
+        res.status(200).json(foodItems);
+    } catch (error) {
+        console.error('Get Available FoodItems error:', error);
+        res.status(500).json({ message: 'Failed to get food items' });
+    }
+};
+
