@@ -20,7 +20,7 @@ router.get('/:id', getEventById);
 router.put('/:id', updateEvent);
 router.delete('/:id', deleteEvent);
 
-// Optional: add participant route
-router.post('/participant', addParticipant);
+router.post('/:id/join', addParticipant);
+
 
 export default router;

@@ -9,6 +9,7 @@ const EventSchema = new Schema({
     endDate: { type: Date, required: true },
     stallOwners: [{ type: Schema.Types.ObjectId, ref: 'StallOwnerProfile' }], // participants
     createdAt: { type: Date, default: Date.now },
+    capacity: { type: Number, required: true },
 });
 
 export default model('Event', EventSchema);

@@ -1,8 +1,7 @@
 // controllers/event.controller.js
 import Event from '../models/Event.model.js';
 
-
-// Fix: Change 'participants' to 'stallOwners' in populate calls
+// Get all events with stallOwners populated
 export const getEvents = async (req, res) => {
     try {
         const events = await Event.find().populate('stallOwners', 'stallName location');
@@ -13,6 +12,7 @@ export const getEvents = async (req, res) => {
     }
 };
 
+// Get event by ID with stallOwners populated
 export const getEventById = async (req, res) => {
     try {
         const { id } = req.params;
@@ -25,17 +25,22 @@ export const getEventById = async (req, res) => {
     }
 };
 
-// Fix: Update createEvent to handle startDate and endDate
+// Create a new event
 export const createEvent = async (req, res) => {
     try {
-        const { name, description, location, startDate, endDate } = req.body;
+        const { name, description, location, startDate, endDate, capacity } = req.body;
+
+        console.log('Incoming event data:', req.body);
+
         const newEvent = await Event.create({
             name,
             description,
             location,
             startDate,
-            endDate
+            endDate,
+            capacity,
         });
+
         res.status(201).json(newEvent);
     } catch (error) {
         console.error('Create Event error:', error);
@@ -43,26 +48,52 @@ export const createEvent = async (req, res) => {
     }
 };
 
-// Fix: Update addParticipant to use stallOwners
+// Add a stallOwner participant to event
 export const addParticipant = async (req, res) => {
     try {
-        const { eventId, stallOwnerId } = req.body;
-        const event = await Event.findById(eventId);
-        if (!event) return res.status(404).json({ message: 'Event not found' });
+        const eventId = req.params.id;
+        const stallOwnerId = req.user.id;
 
-        if (!event.stallOwners.includes(stallOwnerId)) {
-            event.stallOwners.push(stallOwnerId);
-            await event.save();
+        if (!eventId) {
+            return res.status(400).json({ message: 'Event ID is required' });
         }
 
-        res.status(200).json(event);
+        const event = await Event.findById(eventId);
+        if (!event) {
+            return res.status(404).json({ message: 'Event not found' });
+        }
+
+        console.log('Event fetched:', event);
+        console.log('Event capacity:', event.capacity);
+        console.log('Event stallOwners:', event.stallOwners);
+        console.log('Authenticated user ID:', req.user?.id);
+
+
+        // Check capacity
+        if (event.stallOwners.length >= event.capacity) {
+            return res.status(400).json({ message: 'Event capacity full' });
+        }
+
+        // Check if user already joined
+        const alreadyJoined = event.stallOwners.some(id => id.toString() === stallOwnerId);
+        if (alreadyJoined) {
+            return res.status(400).json({ message: 'User already a participant' });
+        }
+
+        // Add user to stallOwners array
+        event.stallOwners.push(stallOwnerId);
+
+        // Save updated event
+        await event.save();
+
+        return res.json({ message: 'Successfully joined event', event });
     } catch (error) {
         console.error('Add Participant error:', error);
-        res.status(500).json({ message: 'Failed to add participant' });
+        return res.status(500).json({ message: 'Server error' });
     }
 };
 
-// Delete Event
+// Delete event by ID
 export const deleteEvent = async (req, res) => {
     try {
         const { id } = req.params;
@@ -75,7 +106,7 @@ export const deleteEvent = async (req, res) => {
     }
 };
 
-// Update Event
+// Update event by ID
 export const updateEvent = async (req, res) => {
     try {
         const { id } = req.params;
@@ -87,6 +118,3 @@ export const updateEvent = async (req, res) => {
         res.status(500).json({ message: 'Failed to update event' });
     }
 };
-
-
-

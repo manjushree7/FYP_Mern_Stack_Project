@@ -7,17 +7,13 @@ import useStore from '../zustand/store';
 const Admin = () => {
     const navigate = useNavigate();
     const { login } = useStore();
-    const [formData, setFormData] = useState({
-        email: '',
-        password: '',
-    });
+    const [formData, setFormData] = useState({ email: '', password: '' });
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [error, setError] = useState('');
 
     const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
         setError('');
     };
 
@@ -32,28 +28,20 @@ const Admin = () => {
         }
 
         try {
-            // Check for hardcoded admin login
-            if (formData.email === 'admin' && formData.password === 'admin') {
-                const fakeAdminUser = {
-                    name: 'Admin',
-                    email: 'admin',
-                    role: 'Admin',
-                };
-                login(fakeAdminUser, 'fake-admin-token');
-                navigate('/admin-dashboard');
-                return;
-            }
-
-            // Normal login for stallowners/customers
-            const response = await api.post('/auth/login', {
+            // Login via backend API for all users including admin
+            const res = await api.post('/auth/login', {
                 email: formData.email,
                 password: formData.password,
             });
 
-            const { user, token } = response.data;
+            console.log('Login response:', res.data);
+
+            const { user, token } = res.data;
             login(user, token);
 
-            if (user.role === 'StallOwner') {
+            if (user.role === 'Admin') {
+                navigate('/admin-dashboard');
+            } else if (user.role === 'StallOwner') {
                 navigate('/stall-owner-dashboard');
             } else {
                 navigate('/home');
@@ -65,17 +53,13 @@ const Admin = () => {
         }
     };
 
-    const handleForgotPassword = () => {
-        console.log('Forgot password clicked');
-    };
-
     return (
         <div className="min-h-screen bg-gradient-to-br from-indigo-50 via-white to-purple-50 flex items-center justify-center p-4">
             <div className="w-full max-w-md">
                 <div className="text-center mb-8">
                     <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl mb-4 shadow-lg">
                         <div className="w-8 h-8 bg-white rounded-lg flex items-center justify-center">
-                            <div className="w-4 h-4 bg-gradient-to-r from-indigo-600 to-purple-600 rounded"></div>
+                            <div className="w-4 h-4 bg-gradient-to-r from-indigo-600 to-purple-600 rounded" />
                         </div>
                     </div>
                     <h1 className="text-3xl font-bold text-gray-900 mb-2">Welcome Back</h1>
@@ -135,16 +119,6 @@ const Admin = () => {
                             </div>
                         </div>
 
-                        <div className="flex justify-end">
-                            <button
-                                type="button"
-                                onClick={handleForgotPassword}
-                                className="text-sm text-indigo-600 hover:text-indigo-700 font-medium"
-                            >
-                                Forgot password?
-                            </button>
-                        </div>
-
                         <button
                             onClick={handleSubmit}
                             disabled={isLoading || !formData.email || !formData.password}
@@ -159,27 +133,7 @@ const Admin = () => {
                                 </>
                             )}
                         </button>
-
-                        <div className="mt-6 text-center">
-                            <p className="text-gray-600">
-                                Don't have an account?{' '}
-                                <button
-                                    onClick={() => navigate('/signup')}
-                                    className="text-indigo-600 hover:text-indigo-700 font-medium"
-                                >
-                                    Sign up
-                                </button>
-                            </p>
-                        </div>
                     </div>
-                </div>
-
-                <div className="mt-8 text-center text-sm text-gray-500">
-                    <p>
-                        By continuing, you agree to our{' '}
-                        <button className="text-indigo-600 hover:text-indigo-700">Terms of Service</button> and{' '}
-                        <button className="text-indigo-600 hover:text-indigo-700">Privacy Policy</button>
-                    </p>
                 </div>
             </div>
         </div>

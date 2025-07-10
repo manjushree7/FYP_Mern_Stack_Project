@@ -16,6 +16,11 @@ import 'react-toastify/dist/ReactToastify.css';
 import StallOwnerOrders from './page/StallOwnerOrders.jsx';
 import CustomerOrders from './page/CustomerOrders.jsx';
 import Admin from './page/admin.jsx';
+import AdminCreateEvent from './admin/AdminCreateEvent.jsx';
+import AdminEventsList from './admin/AdminEventsList.jsx';
+import AdminDashboard from './admin/AdminDashboard.jsx';
+import PaymentSuccessPage from './pages/PaymentSuccessPage';
+
 
 import apiService from './services/apiService';
 import StallOwnerDashboard from './components/Dashboard/StallOwnerDashboard.jsx';
@@ -35,10 +40,13 @@ function App() {
                     <Route path="/menu" element={<FoodMenu />} />
                     <Route path="/cart" element={<CartPage />} />
                     <Route path="/payment/:orderId" element={<PaymentPage />} />
+                    <Route path="/payment-success" element={<PaymentSuccessPage />} />
                     <Route path="/dashboard" element={<StallOwnerDashboard />} />
                     <Route path="/orders" element={<CustomerOrders />} />
                     <Route path="/received-orders" element={<StallOwnerOrders />} />
-
+                    <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                    <Route path="/admin/events" element={<AdminEventsList />} />
+                    <Route path="/admin/events/create" element={<AdminCreateEvent />} />
 
                 </Routes>
             </MainLayout>
