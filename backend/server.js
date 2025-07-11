@@ -9,6 +9,8 @@ import eventRoutes from './routes/Event.routes.js';
 import cartRoutes from './routes/cart.routes.js';
 import orderRoutes from './routes/order.routes.js';
 import paymentRoutes from './routes/payment.routes.js';
+import dashboardRoutes from './routes/dashboardRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
 
 
 dotenv.config();
@@ -26,6 +28,8 @@ app.use('/api/events', eventRoutes);
 app.use('/api/cart', cartRoutes);
 app.use('/api/orders', orderRoutes);
 app.use('/api/payments', paymentRoutes);
+app.use('/api/dashboards', dashboardRoutes);
+app.use('/api/admin', adminRoutes);
 
 
 mongoose.connect(process.env.MONGO).then(() => {

@@ -28,7 +28,7 @@ const ProductCard = ({ product, onAddToCart }) => {
                 <p className="text-gray-700 text-sm mt-1">{product.description}</p>
             )}
             <p className="text-green-700 font-bold text-xl mt-3">
-                ${product.price.toFixed(2)}
+                Rs{product.price.toFixed(2)}
             </p>
             <button
                 onClick={handleAdd}

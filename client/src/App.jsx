@@ -19,7 +19,8 @@ import Admin from './page/admin.jsx';
 import AdminCreateEvent from './admin/AdminCreateEvent.jsx';
 import AdminEventsList from './admin/AdminEventsList.jsx';
 import AdminDashboard from './admin/AdminDashboard.jsx';
-import PaymentSuccessPage from './pages/PaymentSuccessPage';
+import PaymentSuccessPage from './components/payment/PaymentSuccessPage.jsx';
+import AdminUsersPage from './admin/AdminUsersPage.jsx';
 
 
 import apiService from './services/apiService';
@@ -47,6 +48,7 @@ function App() {
                     <Route path="/admin/dashboard" element={<AdminDashboard />} />
                     <Route path="/admin/events" element={<AdminEventsList />} />
                     <Route path="/admin/events/create" element={<AdminCreateEvent />} />
+                    <Route path="/admin/users" element={<AdminUsersPage />} />
 
                 </Routes>
             </MainLayout>

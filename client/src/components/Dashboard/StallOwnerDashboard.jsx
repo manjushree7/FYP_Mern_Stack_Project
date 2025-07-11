@@ -13,13 +13,17 @@ const StallOwnerDashboard = () => {
     const loadDashboardData = async () => {
       try {
         const [ordersRes, stallsRes, eventsRes] = await Promise.all([
-          api.get('/orders/stallowner/all'),
-          api.get('/admin/stalls/count'),
-          api.get('/events'),
+          api.get('/dashboards/orders/stallowner/all'),
+          api.get('/dashboards/admin/stalls/count'),
+          api.get('/dashboards/events'),
         ]);
 
         const now = new Date();
-        const ongoing = eventsRes.data.filter(event => new Date(event.startDate) <= now && new Date(event.endDate) >= now);
+        const ongoing = eventsRes.data.filter(
+          event =>
+            new Date(event.startDate) <= now &&
+            new Date(event.endDate) >= now
+        );
         const upcoming = eventsRes.data.filter(event => new Date(event.startDate) > now);
 
         setPendingOrders(ordersRes.data.filter(order => order.status === 'pending'));

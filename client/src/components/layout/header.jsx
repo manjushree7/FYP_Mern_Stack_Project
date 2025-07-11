@@ -41,7 +41,7 @@ const Header = () => {
                 {user && user.role === 'StallOwner' && (
                     <>
                         <Link to="/dashboard" className="hover:underline">Dashboard</Link>
-                        <Link to="/fooditems" className="hover:underline">Food Items</Link>
+                        <Link to="/stall/foods" className="hover:underline">Food Items</Link>
                         <Link to="/events" className="hover:underline">Events</Link>
                         <Link to="/orders" className="hover:underline">Orders</Link>
                         <Link to="/profile" className="hover:underline">Profile</Link>

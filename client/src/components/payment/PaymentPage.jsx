@@ -9,17 +9,14 @@ const PaymentPage = () => {
     useEffect(() => {
         async function initiatePayment() {
             try {
-                // Fetch order info
                 const { data: order } = await api.get(`/orders/${orderId}`);
 
-                // Initiate payment at backend to get payment_url
                 const { data } = await api.post('/payments/khalti/initiate', {
-                    amount: order.totalPrice * 100, // in paisa
+                    amount: order.totalPrice * 100,
                     orderId: order._id,
                     return_url: `${window.location.origin}/payment-success?orderId=${order._id}`,
                 });
 
-                // Redirect to Khalti hosted payment page
                 window.location.href = data.payment_url;
             } catch (error) {
                 alert('Failed to initiate payment. Please try again.');

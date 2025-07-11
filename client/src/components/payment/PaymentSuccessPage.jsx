@@ -1,3 +1,4 @@
+// src/components/payment/PaymentSuccessPage.jsx
 import React, { useEffect, useState } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
 import api from '../../utlis/api';
