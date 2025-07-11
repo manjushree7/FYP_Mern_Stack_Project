@@ -1,15 +1,9 @@
-// payment.controller.js
 import axios from 'axios';
 import Order from '../models/order.model.js';
 
 export const initiateKhaltiPayment = async (req, res) => {
-    const { amount, orderId, return_url } = req.body;
-    const user = req.user;
+    const { amount, orderId, return_url, user } = req.body;
 
-    if (!user) {
-        return res.status(401).json({ message: "Unauthorized: User missing" });
-    }
-    console.log('Authenticated User:', req.user);
     const payload = {
         return_url,
         website_url: 'http://localhost:5173',
@@ -25,7 +19,7 @@ export const initiateKhaltiPayment = async (req, res) => {
 
     try {
         const response = await axios.post(
-            `${process.env.KHALTI_BASE_URL}/epayment/initiate`, // no trailing slash
+            `${process.env.KHALTI_BASE_URL}/epayment/initiate/`,
             payload,
             {
                 headers: {
@@ -40,7 +34,6 @@ export const initiateKhaltiPayment = async (req, res) => {
             pidx: response.data.pidx,
         });
     } catch (error) {
-        console.error('Khalti initiate payment error:', error.response?.data || error.message);
         res.status(500).json({ error: error.response?.data || error.message });
     }
 };
@@ -50,7 +43,7 @@ export const verifyKhaltiPayment = async (req, res) => {
 
     try {
         const response = await axios.post(
-            `${process.env.KHALTI_BASE_URL}/epayment/lookup`, // no trailing slash
+            `${process.env.KHALTI_BASE_URL}/epayment/lookup/`,
             { pidx },
             {
                 headers: {
@@ -73,7 +66,6 @@ export const verifyKhaltiPayment = async (req, res) => {
 
         res.status(400).json({ message: 'Payment not completed' });
     } catch (error) {
-        console.error('Khalti verify payment error:', error.response?.data || error.message);
         res.status(500).json({ message: 'Khalti verification error', error: error.response?.data || error.message });
     }
 };

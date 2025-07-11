@@ -1,4 +1,3 @@
-//payment.routes.js
 import express from 'express';
 import { initiateKhaltiPayment, verifyKhaltiPayment } from '../controller/payment.controller.js';
 import { authenticateUser } from '../middleware/auth.middleware.js';

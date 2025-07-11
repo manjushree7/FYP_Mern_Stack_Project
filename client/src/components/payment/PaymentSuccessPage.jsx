@@ -19,8 +19,12 @@ const PaymentSuccessPage = () => {
 
     async function verifyPayment() {
       try {
-        await api.post('/payments/khalti/verify', { pidx });
-        setStatus('Payment verified successfully! Thank you for your order.');
+        const res = await api.post('/payments/khalti/verify', { pidx });
+        if (res.data.message === 'Payment verified') {
+          setStatus('Payment verified successfully! Thank you for your order.');
+        } else {
+          setStatus(`Payment status: ${res.data.message || 'Unknown'}`);
+        }
       } catch {
         setStatus('Payment verification failed or incomplete.');
       }
